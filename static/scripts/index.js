@@ -233,4 +233,11 @@ $(document).ready(function() {
         if(e.which === 13)
             $("#sendBtn").click();
     });
+
+    window.addEventListener("resize", function() {
+        const inputBox = document.getElementById("messageInput");
+
+        if (window.innerHeight < 500)
+            inputBox.scrollIntoView({ behavior: "smooth" });
+    });
 });
