@@ -21,11 +21,13 @@ import (
 	"database/sql"
 	"encoding/json"
 	"html"
-	"log"
 	"net/http"
+	"os"
 	"strings"
 	"sync"
+	"time"
 
+	"github.com/charmbracelet/log"
 	"github.com/gorilla/websocket"
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -54,6 +56,11 @@ type Room struct {
 }
 
 var (
+	logger = log.NewWithOptions(os.Stderr, log.Options{
+		Prefix:          ":",
+		ReportTimestamp: true,
+		TimeFormat:      time.RFC3339Nano,
+	})
 	clients    = make(map[*Client]bool)
 	broadcast  = make(chan Message)
 	upgrader   = websocket.Upgrader{}
@@ -95,24 +102,24 @@ func updateRoomUserCount(roomName string, delta int) {
 
 		stmt, err := db.Prepare("DELETE FROM rooms WHERE name = ?")
 		if err != nil {
-			log.Printf("Error preparing delete statement: %v", err)
+			logger.Errorf("Preparing delete statement: %v", err)
 			return
 		}
 		defer stmt.Close()
 
 		_, err = stmt.Exec(roomName)
 		if err != nil {
-			log.Printf("Error deleting room %s: %v", roomName, err)
+			logger.Errorf("Deleting room %s: %v", roomName, err)
 			return
 		}
-		log.Printf("Room \"%s\" deleted due to inactivity", roomName)
+		logger.Warnf("Room \"%s\" deleted due to inactivity", roomName)
 	}
 }
 
 func handleConnections(w http.ResponseWriter, r *http.Request) {
 	ws, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
-		log.Printf("Websocket upgrade error: %v", err)
+		logger.Errorf("Websocket upgrade error: %v", err)
 		return
 	}
 	defer ws.Close()
@@ -126,7 +133,8 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 		var msg Message
 		err := ws.ReadJSON(&msg)
 		if err != nil {
-			log.Printf("Error: %v", err)
+			logger.Warnf("Error: %v", err)
+
 			clientsMux.Lock()
 			delete(clients, client)
 			clientsMux.Unlock()
@@ -141,7 +149,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 		msg.Room = sanitizeInput(msg.Room)
 
 		if !validateRoomName(msg.Room) {
-			log.Printf("Invalid room name attempt: %s", msg.Room)
+			logger.Warnf("Invalid room name attempt: \"%s\"", msg.Room)
 			continue
 		}
 
@@ -290,7 +298,7 @@ func handleMessages() {
 				err := client.conn.WriteJSON(msg)
 
 				if err != nil {
-					log.Printf("Error: %v", err)
+					logger.Errorf("Error: %v", err)
 					client.conn.Close()
 					delete(clients, client)
 				}
@@ -301,12 +309,28 @@ func handleMessages() {
 	}
 }
 
+func loggingMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		start := time.Now()
+		next.ServeHTTP(w, r)
+		duration := time.Since(start)
+
+		logger.Infof(
+			"Request: %s %s | Remote Address: %s | Duration: %v",
+			r.Method,
+			r.URL.Path,
+			r.RemoteAddr,
+			duration,
+		)
+	})
+}
+
 func main() {
 	var err error
 	db, err = sql.Open("sqlite3", "./chat.db")
 
 	if err != nil {
-		log.Fatal(err)
+		logger.Fatal(err)
 	}
 	defer db.Close()
 
@@ -318,20 +342,32 @@ func main() {
     `)
 
 	if err != nil {
-		log.Fatal(err)
+		logger.Fatal(err)
 	}
+
+	mux := http.NewServeMux()
+	mux.HandleFunc("/ws", handleConnections)
+	mux.HandleFunc("/create-room", handleCreateRoom)
+	mux.HandleFunc("/join-room", handleJoinRoom)
+	mux.Handle("/", http.FileServer(http.Dir("static")))
 
 	http.HandleFunc("/ws", handleConnections)
 	http.HandleFunc("/create-room", handleCreateRoom)
 	http.HandleFunc("/join-room", handleJoinRoom)
 	http.Handle("/", http.FileServer(http.Dir("static")))
 
+	addr := "localhost:8080"
 	go handleMessages()
 
-	log.Println("Server starting at localhost:8080...")
-	err = http.ListenAndServe("localhost:8080", nil)
+	server := &http.Server{
+		Addr:    addr,
+		Handler: loggingMiddleware(mux),
+	}
+
+	logger.Infof("Server starting at \"%s\"...", addr)
+	err = server.ListenAndServe()
 
 	if err != nil {
-		log.Fatal("Web socket: ", err)
+		logger.Warnf("Web socket: %s", err.Error())
 	}
 }
