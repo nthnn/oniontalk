@@ -2,10 +2,6 @@
 
 OnionTalk is a secure, end-to-end encrypted chat application designed for deployment on the TOR Network as an onion service. It features room-based conversations with encrypted messaging, user presence tracking, and typing indicators.
 
-<p align="center">
-    <img src="assets/screenshot.png" />
-</p>
-
 ## Features
 
 - 🔒 End-to-end encryption using AES-GCM
@@ -16,6 +12,18 @@ OnionTalk is a secure, end-to-end encrypted chat application designed for deploy
 - 🔐 Room-specific encryption keys derived from room name and password
 - 🗑️ Automatic room cleanup when inactive
 - 📱 Responsive design using Bootstrap
+
+<p align="center">
+    <img src="assets/screenshot-1.png" />
+    <br/>
+    <i>OnionTalk homepage screenshot.</i>
+</p>
+
+<p align="center">
+    <img src="assets/screenshot-2.png" />
+    <br/>
+    <i>OnionTalk messaging page screenshot. (Lyrics from "Aphrodite" by The Ridleys)</i>
+</p>
 
 ## Security Features
 
