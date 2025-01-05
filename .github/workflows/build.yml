@@ -10,7 +10,8 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install Go compiler
-        run: apt install -y golang-go
+        run: |
+          sudo apt install -y golang-go
 
       - name: Go version
         run: go version
