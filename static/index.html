@@ -9,31 +9,45 @@
     <link href="styles/index.css" rel="stylesheet" />
 </head>
 <body>
-    <div class="container">
-        <div id="loginForm" class="card mb-4 shadow-lg">
+    <div id="loginForm" class="w-100 px-2 pt-4">
+        <div class="card mb-4 shadow-lg">
             <div class="card-body">
                 <h1 class="card-title mb-4 text-center">🧅 OnionTalk</h1>
 
                 <div class="mb-3">
-                    <input type="text" id="username" class="form-control" placeholder="Username" autocomplete="off" required>
-                </div>
-                <div class="mb-3">
-                    <input type="text" id="room" class="form-control" placeholder="Room Name" autocomplete="off" required>
-                </div>
-                <div class="mb-3">
-                    <input type="password" id="password" class="form-control" placeholder="Room Password" autocomplete="off" required>
+                    <input type="text" id="username" class="form-control mb-2" placeholder="Username" autocomplete="off" required>
+                    <input type="text" id="room" class="form-control mb-2" placeholder="Room Name" autocomplete="off" required>
+                    <input type="password" id="password" class="form-control mb-2" placeholder="Room Password" autocomplete="off" required>
+
+                    <label for="disclaimer" class="form-check-label">
+                        <input type="checkbox" class="form-check-input" id="disclaimer" required />
+                        I have already read the <a href="https://github.com/nthnn/oniontalk/blob/main/DISCLAIMER.md" class="text-decoration-none" target="_blank">disclaimer notice</a> of the OnionTalk service.
+                    </label>
                 </div>
 
                 <div id="errorMessage" class="error-message"></div>
+                <button id="joinBtn" class="btn btn-primary border w-100">Join</button>
 
                 <hr/>
-                <button id="joinBtn" class="btn btn-primary border w-100">Join</button>
+                <a class="btn btn-dark border w-100" href="https://github.com/nthnn/oniontalk" target="_blank">GitHub</a>
             </div>
         </div>
+    </div>
 
+    <div class="container">
         <div id="chatInterface" class="card shadow-lg" style="display: none;">
-            <div class="card-body">
-                <h5 class="card-title mb-3"><span id="roomName"></span></h5>
+            <div class="card-body pt-2 mt-0">
+                <h5 class="card-title w-100">
+                    <div class="row">
+                        <div class="col-6 pt-2">
+                            <span id="roomName"></span>
+                        </div>
+
+                        <div class="col-6" align="right">
+                            <a href="/" class="btn btn-danger my-0">Exit</a>
+                        </div>
+                    </div>
+                </h5>
 
                 <div id="messages"></div>
                 <div id="typingIndicator" class="typing-indicator mb-2"></div>
