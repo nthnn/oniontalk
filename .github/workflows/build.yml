@@ -1,0 +1,28 @@
+name: OnionTalk Build
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Go compiler
+        run: apt install -y golang-go
+
+      - name: Go version
+        run: go version
+
+      - name: Build OnionTalk
+        run: |
+          chmod +x build.sh
+          ./build.sh
+
+      - name: Upload QLBase build
+        uses: actions/upload-artifact@v4
+        with:
+          name: OnionTalk
+          path: dist/
+          retention-days: 1
