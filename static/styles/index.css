@@ -17,10 +17,12 @@ html, body {
     margin: 2rem auto !important;
 }
 
-#chatInterface {
-    height: 100vh;
-    margin: 0 !important;
-    border-radius: 0 !important;
+#chatInterface .card-body {
+    height: calc(100vh - 56px);
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    overflow-y: auto;
 }
 
 #chatInterface .card-body {
@@ -32,15 +34,21 @@ html, body {
 
 #messages {
     flex-grow: 1;
-    height: auto !important;
+    height: max-content !important;
     overflow-y: auto;
     border: 1px solid #dee2e6;
     padding: 15px;
     margin-bottom: 15px;
 }
 
+#messageInput {
+    flex: 1;
+    min-height: 45px;
+}
+
 .input-group {
     margin-bottom: 1rem;
+    min-height: 50px;
 }
 
 .typing-indicator {
@@ -54,19 +62,14 @@ html, body {
     display: none;
 }
 
-.encryption-status {
-    font-size: 12px;
-    color: #198754;
-}
-
 .message-container {
     max-width: 80%;
     margin: 0.5rem 0;
     margin-bottom: 0.1rem 0;
 }
 
-.message-bubble {
-    border-radius: 1rem;
-    padding: 0.75rem 1rem;
-    word-wrap: break-word;
+@media only screen and (max-width: 771px) {
+    #messages {
+        height: 75vh !important;
+    }
 }
