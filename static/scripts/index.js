@@ -113,6 +113,11 @@ $(document).ready(function() {
             return;
         }
 
+        if(!$('#disclaimer').is(":checked")) {
+            showError("Please read the disclaimer first.");
+            return;
+        }
+
         username += "#" + Math.floor(100000 + Math.random() * 900000);
         try {
             encryptionKey = await generateRoomKey(room, password);
@@ -144,10 +149,11 @@ $(document).ready(function() {
     function connectWebSocket() {
         ws = new WebSocket("ws://" + window.location.host + "/ws");
         ws.onopen = function() {
-            $("#loginForm").hide();
+            $("#loginForm").remove();
             $("#chatInterface").show();
             $("#roomName").text(room);
 
+            $("#messageInput").focus();
             ws.send(JSON.stringify({
                 type: "join",
                 username: username,
