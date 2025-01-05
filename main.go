@@ -56,7 +56,7 @@ type Room struct {
 }
 
 var (
-	logger = log.NewWithOptions(os.Stderr, log.Options{
+	logger = log.NewWithOptions(os.Stdout, log.Options{
 		Prefix:          ":",
 		ReportTimestamp: true,
 		TimeFormat:      time.RFC3339Nano,
