@@ -1,5 +1,7 @@
 # 🧅 OnionTalk
 
+![OnionTalk Build](https://github.com/nthnn/oniontalk/actions/workflows/build.yml/badge.svg)
+
 OnionTalk is a secure, end-to-end encrypted chat application designed for deployment on the TOR Network as an onion service. It features room-based conversations with encrypted messaging, user presence tracking, and typing indicators.
 
 ## Features
