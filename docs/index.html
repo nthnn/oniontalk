@@ -1,0 +1,55 @@
+<!DOCTYPE>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="keywords" content="nthnn" />
+    <meta name="author" content="nthnn, nathannestein" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>🧅 OnionTalk</title>
+    <link rel="stylesheet" href="styles/bootstrap.min.css" />
+</head>
+<body>
+    <br/>
+    <div class="container my-4" align="center">
+        <div class="col-lg-8 col-12 p-4 shadow-lg border">
+            <a href="https://github.com/nthnn/oniontalk" target="_blank" class="text-decoration-none text-dark">
+                <h1>🧅 OnionTalk</h1>
+            </a>
+            <br/>
+
+            <p>A secure, end-to-end encrypted chat application designed for deployment on the TOR Network as an onion service with room-based conversations with encrypted messaging, user presence tracking, and typing indicators. Below is the onion link:</p>
+            <div class="row gap-0 row-gap-3 m-0 p-0">
+                <div class="col-10 m-0 p-0">
+                    <pre class="border bg-secondary px-2 py-2 d-flex w-100" align="center">
+                        <div class="w-100" align="center">n44z5vtkhti5qncg3hswwykir2vy7kifptnykxi4nbso4iya3gtiufid.onion</div>
+                    </pre>
+                </div>
+
+                <div class="col-2 m-0 p-0">
+                    <button class="btn btn-primary d-flex w-100" onclick="copyToClipboard()">
+                        <div class="w-100" align="center" id="copy-btn">Copy</div>
+                    </button>
+                </div>
+            </div>
+
+            <hr/>
+            <p>Or scan the QR code below:</p>
+            <img src="assets/qrcode.png" width="200" />
+        </div>
+    </div>
+    <br/>
+
+    <script>
+        const copyToClipboard = ()=> {
+            navigator.clipboard.writeText(
+                "n44z5vtkhti5qncg3hswwykir2vy7kifptnykxi4nbso4iya3gtiufid.onion"
+            );
+
+            const copyBtn = document.getElementById("copy-btn");
+            copyBtn.innerText = "Copied!";
+
+            setTimeout(()=> copyBtn.innerText = "Copy", 1500);
+        }
+    </script>
+</body>
+</html>
